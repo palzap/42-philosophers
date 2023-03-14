@@ -6,24 +6,45 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 08:31:18 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/13 14:02:43 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/14 10:25:53 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
+void	init_philos(t_data *data)
+{
+	t_philo *philo;
+	int	i;
+
+	i = 0;
+	philo = malloc(sizeof(t_philo) * data->philos);
+	while (i < data->philos)
+	{
+		philo[i].index = i;
+		philo[i].meal_time = 0;
+		philo[i].next_meal = 0;
+		philo[i].meal_number = 0;
+		philo[i].dead = 0;
+		philo[i].right_fork = i;
+		philo[i].left_fork = (i + (data->philos - 1) % data->philos);
+		i++;
+	}
+}
+
 void	get_data(int argc, char **argv, t_data *data)
 {
 	data->philos = ft_atoi(argv[1]);
+	data->thread = malloc(sizeof(pthread_t) * data->philos);
+	data->forks = malloc(sizeof(pthread_mutex_t) * data->philos);
 	data->die = ft_atoi(argv[2]);
 	data->eat = ft_atoi(argv[3]);
 	data->sleep = ft_atoi(argv[4]);
 	if (argc == 6)
 		data->max_eat = ft_atoi(argv[5]);
 	else 
-		data->max_eat = 0;
-	return ;
-} 
+		data->max_eat = INT_MAX;
+}
 
 int	valid_args(char **argv)
 {
@@ -42,21 +63,15 @@ int	valid_args(char **argv)
 		}
 		i++;
 	}
-	i = 1;
-	while (argv[i])
-	{
-		if (ft_atoi(argv[i]) <= 0)
-			return (0);
-		i++;
-	}
 	return (1);
 }
 
 int	main(int argc, char **argv)
 {
-	t_data data;
+	t_data *data;
 	t_philo *philo;
 	
+	data = malloc(sizeof(t_data));
 	if (argc == 5 || argc == 6)
 	{
 		if (!valid_args(argv))
@@ -64,7 +79,8 @@ int	main(int argc, char **argv)
 			printf("Error\nInvalid argument.\n");
 			return (0);
 		}
-		get_data(argc, argv, &data);
+		get_data(argc, argv, data);
+		init_philos(data);
 	}
 	else
 		printf("Error\nIncorrect number of arguments.\n");
