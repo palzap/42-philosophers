@@ -6,13 +6,33 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 08:31:18 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/14 10:25:53 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/14 14:54:41 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	init_philos(t_data *data)
+void	*start_dinner(void *arg)
+{
+	t_philo *philo;
+
+	philo = arg;
+	philo->dead
+}
+
+void	init_forks(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->philos)
+	{
+		pthread_mutex_init(data->forks + i, NULL);
+		i++;
+	}	
+}
+
+t_philo	*init_philos(t_data *data)
 {
 	t_philo *philo;
 	int	i;
@@ -30,6 +50,7 @@ void	init_philos(t_data *data)
 		philo[i].left_fork = (i + (data->philos - 1) % data->philos);
 		i++;
 	}
+	return (philo);
 }
 
 void	get_data(int argc, char **argv, t_data *data)
@@ -70,7 +91,9 @@ int	main(int argc, char **argv)
 {
 	t_data *data;
 	t_philo *philo;
-	
+	int	i;
+
+	i = 0;	
 	data = malloc(sizeof(t_data));
 	if (argc == 5 || argc == 6)
 	{
@@ -80,7 +103,13 @@ int	main(int argc, char **argv)
 			return (0);
 		}
 		get_data(argc, argv, data);
-		init_philos(data);
+		philo = init_philos(data);
+		init_forks(data);
+		while (i < data->philos)
+		{
+			pthread_create(data->thread + i, NULL, start_dinner, philo + i);
+
+		}
 	}
 	else
 		printf("Error\nIncorrect number of arguments.\n");

@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 08:15:19 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/14 09:06:25 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/14 14:23:47 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_data
 	int	eat;
 	int	sleep;
 	int	max_eat;
+	int	start;
 }	t_data;
 
 typedef	struct s_philo
@@ -43,6 +44,7 @@ typedef	struct s_philo
 	int	dead;
 	int	right_fork;
 	int	left_fork;
+	t_data	*data;
 }	t_philo;
 
 
