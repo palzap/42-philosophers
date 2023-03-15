@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 08:15:19 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/14 14:23:47 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/15 11:19:54 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,27 +28,36 @@ typedef struct s_data
 	pthread_t			*thread;
 	pthread_mutex_t		*forks;
 	int philos;
-	int	die;
-	int	eat;
-	int	sleep;
-	int	max_eat;
+	int	time_to_die;
+	int	time_to_eat;
+	int	time_to_sleep;
+	int	must_eat;
 	int	start;
+	int	dead;
+	int	all_ate;
 }	t_data;
 
 typedef	struct s_philo
 {
 	int	index;
-	int	meal_time;
+	int	last_meal;
 	int	next_meal;
 	int	meal_number;
-	int	dead;
-	int	right_fork;
-	int	left_fork;
+	int	is_dead;
+	pthread_mutex_t	death;
+	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	*right_fork;
 	t_data	*data;
 }	t_philo;
 
 
 /*UTILS-----------------------------------------------------------------------*/
+
+/* Prints 'c' to the file descriptor. */
+void	ft_putchar_fd(char c, int fd);
+
+/* Prints "str" to the file descriptor. */
+void	ft_putstr_fd(char *str, int fd);
 
 /* Converts *str to int. man atoi.  */
 int	ft_atoi(const char *str);

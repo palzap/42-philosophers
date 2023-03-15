@@ -6,30 +6,87 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 08:31:18 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/14 14:54:41 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/15 11:27:33 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	*start_dinner(void *arg)
+int	get_time(void)
 {
-	t_philo *philo;
+	struct timeval time;
 
-	philo = arg;
-	philo->dead
+	gettimeofday(&time, NULL);
+	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-void	init_forks(t_data *data)
+void	eating(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->right_fork);
+	pthread_mutex_lock(&philo->left_fork);
+	pthread_mutex_lock(&philo->death);
+	philo->last_meal = get_time();
+	usleep(philo->data->time_to_eat);
+	print_message();
+	pthread_mutex_unlock(&philo->right_fork);
+	pthread_mutex_unlock(&philo->left_fork);
+	philo->meal_number++;
+}
+
+void	philo_assemble(void *arg)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)arg;
+	philo->data->start = 
+	eating(philo);
+	sleeping(philo);
+	thinking(philo);
+}
+
+int	print_destroy(char *str, t_data *data)
 {
 	int	i;
 
 	i = 0;
 	while (i < data->philos)
 	{
-		pthread_mutex_init(data->forks + i, NULL);
+		pthread_mutex_destroy(&data->forks[i]);
 		i++;
-	}	
+	}
+	return (print_clean_data(str, data));
+}
+
+int	print_clean_data(char *str, t_data *data)
+{
+	if (data->thread)
+		free(data->thread);
+	if (data->forks)
+		free(data->forks);
+	if (data)
+		free(data);
+	return (print_error(str));
+}
+
+int	print_error(char *str)
+{
+	ft_putstr_fd("Error\n", 2);
+	ft_putstr_fd(str, 2);
+	return (0);
+}
+
+int	init_forks(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->philos)
+	{
+		if (pthread_mutex_init(&data->forks[i], NULL) != 0)
+			return (print_clean_data("Mutex init failed\n", data));
+		i++;
+	}
+	return (1);	
 }
 
 t_philo	*init_philos(t_data *data)
@@ -39,52 +96,64 @@ t_philo	*init_philos(t_data *data)
 
 	i = 0;
 	philo = malloc(sizeof(t_philo) * data->philos);
+	if (!philo)
+		return (print_destroy("Memory allocation failed at philo\n", data));
 	while (i < data->philos)
 	{
 		philo[i].index = i;
-		philo[i].meal_time = 0;
+		philo[i].last_meal = 0;
 		philo[i].next_meal = 0;
 		philo[i].meal_number = 0;
-		philo[i].dead = 0;
-		philo[i].right_fork = i;
-		philo[i].left_fork = (i + (data->philos - 1) % data->philos);
+		philo[i].is_dead = 0;
+		pthread_mutex_init(&philo[i].death, NULL);
+		philo[i].right_fork = &data->forks[i];
+		philo[i].left_fork = &data->forks[(i - 1) % data->philos];
 		i++;
 	}
 	return (philo);
 }
 
-void	get_data(int argc, char **argv, t_data *data)
+int	get_data(int argc, char **argv, t_data *data)
 {
 	data->philos = ft_atoi(argv[1]);
 	data->thread = malloc(sizeof(pthread_t) * data->philos);
+	if (!data->thread)
+		return (print_error("Memory allocation failed at data->thread\n"));
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->philos);
-	data->die = ft_atoi(argv[2]);
-	data->eat = ft_atoi(argv[3]);
-	data->sleep = ft_atoi(argv[4]);
+		return (print_error("Memory allocation failed at data->forks\n"));
+	data->time_to_die = ft_atoi(argv[2]) * 1000;
+	data->time_to_eat = ft_atoi(argv[3]) * 1000;
+	data->time_to_sleep = ft_atoi(argv[4]) * 1000;
+	data->start = 0;
+	data->dead = 0;
+	data->must_eat = -1;
 	if (argc == 6)
-		data->max_eat = ft_atoi(argv[5]);
-	else 
-		data->max_eat = INT_MAX;
+		data->must_eat = ft_atoi(argv[5]);
+	return (1);
 }
 
-int	valid_args(char **argv)
+int	valid_args(char **argv, int argc)
 {
 	int	i;
 	int	j;
 
 	i = 1;
-	while (argv[i])
+	if (argc == 5 || argc == 6)
 	{
-		j = 0;
-		while (argv[i][j])
+		while (argv[i])
 		{
-			if (!ft_isdigit(argv[i][j]))
-				return (0);
-			j++;
+			j = 0;
+			while (argv[i][j])
+			{
+				if (!ft_isdigit(argv[i][j]))
+					return (0);
+				j++;
+			}
+			i++;
 		}
-		i++;
+		return (1);
 	}
-	return (1);
+	return (0);
 }
 
 int	main(int argc, char **argv)
@@ -95,23 +164,22 @@ int	main(int argc, char **argv)
 
 	i = 0;	
 	data = malloc(sizeof(t_data));
-	if (argc == 5 || argc == 6)
+	if (!data)
+		return (print_error("Memory allocation failed at data\n"));
+	if (valid_args(argv, argc) && get_data(argc, argv, data))
 	{
-		if (!valid_args(argv))
-		{
-			printf("Error\nInvalid argument.\n");
+		if (!init_forks(data))
 			return (0);
-		}
-		get_data(argc, argv, data);
 		philo = init_philos(data);
-		init_forks(data);
-		while (i < data->philos)
+		if (!philo)
+			return(0);
+		while (!data->dead)
 		{
-			pthread_create(data->thread + i, NULL, start_dinner, philo + i);
-
+			pthread_create(&data->thread[i], NULL, philo_assemble, &philo[i]);
+			
 		}
 	}
 	else
-		printf("Error\nIncorrect number of arguments.\n");
-	return (0);
+		printf("Error\nInvalid arguments.\n");
+	return (1);
 }

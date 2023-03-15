@@ -6,11 +6,25 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 08:36:53 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/13 08:38:05 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/15 08:41:55 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
+void	ft_putchar_fd(char c, int fd)
+{
+	write(fd, &c, 1);
+}
+
+void	ft_putstr_fd(char *str, int fd)
+{
+	while (*str)
+	{
+		ft_putchar_fd(*str, fd);
+		str++;
+	}
+}
 
 int	ft_isspace(int c)
 {
