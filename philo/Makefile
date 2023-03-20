@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+         #
+#    By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/02 12:26:28 by pealexan          #+#    #+#              #
-#    Updated: 2023/03/13 08:31:00 by pealexan         ###   ########.fr        #
+#    Updated: 2023/03/20 12:25:49 by pealexan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,9 @@ HEADER		= philosophers.h
 
 #----------DIRS----------#
 
-SRC = 	
+SRC =	main.c \
+		destroy.c \
+		utils.c \
 
 #--------COMMANDS--------#
 CC = clang

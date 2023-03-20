@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_init.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbari <mbari@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/11 12:34:36 by mbari             #+#    #+#             */
-/*   Updated: 2021/07/16 11:20:19 by mbari            ###   ########.fr       */
+/*   Updated: 2023/03/20 15:07:41 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_create_mutex(t_simulation *simulation)
 
 	i = 0;
 	pthread_mutex_init(simulation->message, NULL);
-	pthread_mutex_init(simulation->death, NULL);
+	//pthread_mutex_init(simulation->death, NULL);
 	pthread_mutex_init(simulation->stop, NULL);
 	while (i < simulation->philo_numbers)
 		pthread_mutex_init(simulation->forks + i++, NULL);
