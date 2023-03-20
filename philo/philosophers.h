@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 08:15:19 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/15 11:19:54 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/20 07:59:11 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_data
 {
 	pthread_t			*thread;
 	pthread_mutex_t		*forks;
+	pthread_mutex_t		*reapers;
 	int philos;
 	int	time_to_die;
 	int	time_to_eat;
@@ -44,7 +45,7 @@ typedef	struct s_philo
 	int	next_meal;
 	int	meal_number;
 	int	is_dead;
-	pthread_mutex_t	death;
+	pthread_mutex_t	*reaper;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	t_data	*data;

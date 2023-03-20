@@ -6,11 +6,19 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 08:31:18 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/15 11:27:33 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/20 08:28:46 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
+void	print_message(char *str, t_philo *philo)
+{
+	int	time;
+	
+	time = get_time() - philo->data->start;
+	printf("%d %d %s\n", time, philo->index, str);
+}
 
 int	get_time(void)
 {
@@ -20,25 +28,39 @@ int	get_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-void	eating(t_philo *philo)
+void	take_forks(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->right_fork);
+	print_message("has taken a fork", philo);
 	pthread_mutex_lock(&philo->left_fork);
-	pthread_mutex_lock(&philo->death);
+	print_message("has taken a fork", philo);
+}
+
+void	eating(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->reaper);
 	philo->last_meal = get_time();
+	philo->next_meal = get_time() + philo->data->time_to_die;
 	usleep(philo->data->time_to_eat);
-	print_message();
+	print_message("is eating", philo);
 	pthread_mutex_unlock(&philo->right_fork);
 	pthread_mutex_unlock(&philo->left_fork);
 	philo->meal_number++;
 }
+
+void	sleeping(t_philo *philo)
+{
+	
+}
+
+void	thinking(t_philo *philo)
 
 void	philo_assemble(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	philo->data->start = 
+	take_forks(philo);
 	eating(philo);
 	sleeping(philo);
 	thinking(philo);
@@ -52,6 +74,7 @@ int	print_destroy(char *str, t_data *data)
 	while (i < data->philos)
 	{
 		pthread_mutex_destroy(&data->forks[i]);
+		pthread_mutex_destroy(&data->reapers[i]);
 		i++;
 	}
 	return (print_clean_data(str, data));
@@ -63,9 +86,14 @@ int	print_clean_data(char *str, t_data *data)
 		free(data->thread);
 	if (data->forks)
 		free(data->forks);
+	if (data->reapers)
+		free(data->reapers);
 	if (data)
 		free(data);
-	return (print_error(str));
+	if (!str)
+		return (0);
+	else
+		return (print_error(str));
 }
 
 int	print_error(char *str)
@@ -83,6 +111,8 @@ int	init_forks(t_data *data)
 	while (i < data->philos)
 	{
 		if (pthread_mutex_init(&data->forks[i], NULL) != 0)
+			return (print_clean_data("Mutex init failed\n", data));
+		if (pthread_mutex_init(&data->reapers[i], NULL) != 0)
 			return (print_clean_data("Mutex init failed\n", data));
 		i++;
 	}
@@ -105,7 +135,7 @@ t_philo	*init_philos(t_data *data)
 		philo[i].next_meal = 0;
 		philo[i].meal_number = 0;
 		philo[i].is_dead = 0;
-		pthread_mutex_init(&philo[i].death, NULL);
+		philo[i].reaper = &data->reapers[i];
 		philo[i].right_fork = &data->forks[i];
 		philo[i].left_fork = &data->forks[(i - 1) % data->philos];
 		i++;
@@ -120,7 +150,11 @@ int	get_data(int argc, char **argv, t_data *data)
 	if (!data->thread)
 		return (print_error("Memory allocation failed at data->thread\n"));
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->philos);
+	if (!data->forks)
 		return (print_error("Memory allocation failed at data->forks\n"));
+	data->reapers = malloc(sizeof(pthread_mutex_t) * data->philos);
+	if (!data->reapers)
+		return (print_error("Memory allocation failed at data->reapers\n"));
 	data->time_to_die = ft_atoi(argv[2]) * 1000;
 	data->time_to_eat = ft_atoi(argv[3]) * 1000;
 	data->time_to_sleep = ft_atoi(argv[4]) * 1000;
@@ -175,6 +209,7 @@ int	main(int argc, char **argv)
 			return(0);
 		while (!data->dead)
 		{
+			data->start = get_time();
 			pthread_create(&data->thread[i], NULL, philo_assemble, &philo[i]);
 			
 		}
