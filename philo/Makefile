@@ -26,6 +26,7 @@ SRC =	actions.c \
 #--------COMMANDS--------#
 CC = clang
 CFLAGS = -Wall -Wextra -Werror
+EXTRA = -pthread
 AR = ar rcs
 RM = rm -rf
 
@@ -38,7 +39,7 @@ OBJ = ${SRC:.c=.o}
 all: 		$(NAME)
 
 $(NAME): 	$(OBJ) 
-			$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+			$(CC) $(CFLAGS) $(EXTRA) $(OBJ) -o $(NAME)
 
 clean:
 			@$(RM) $(OBJ) $(BONUS_OBJ)
