@@ -6,7 +6,7 @@
 #    By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/02 12:26:28 by pealexan          #+#    #+#              #
-#    Updated: 2023/03/20 12:25:49 by pealexan         ###   ########.fr        #
+#    Updated: 2023/03/21 08:10:25 by pealexan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,9 +15,13 @@ HEADER		= philosophers.h
 
 #----------DIRS----------#
 
-SRC =	main.c \
-		destroy.c \
+SRC =	actions.c \
+		free.c \
+		init.c \
+		main.c \
+		threads.c \
 		utils.c \
+		utils2.c \
 
 #--------COMMANDS--------#
 CC = clang

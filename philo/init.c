@@ -5,104 +5,94 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/20 16:08:26 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/20 16:08:55 by pealexan         ###   ########.fr       */
+/*   Created: 2023/03/21 08:00:21 by pealexan          #+#    #+#             */
+/*   Updated: 2023/03/21 12:07:34 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	init_mutexes(t_data *data)
+t_philo	*init_philos(t_data *data, pthread_mutex_t *forks)
 {
-	int	i;
+	t_philo	*philos;
+	int		i;
 
-	i = 0;
-	if (pthread_mutex_init(data->finish, NULL) != 0)
-		return (print_clean_data("Mutex init failed\n", data));
-	if (pthread_mutex_init(data->message, NULL) != 0)
-		return (print_clean_data("Mutex init failed\n", data));
-	while (i < data->philos)
+	philos = malloc(data->philos * sizeof(t_philo));
+	if (!philos)
 	{
-		if (pthread_mutex_init(data->forks + i, NULL) != 0)
-			return (print_clean_data("Mutex init failed\n", data));
-		if (pthread_mutex_init(data->eatings + i, NULL) != 0)
-			return (print_clean_data("Mutex init failed\n", data));
-		i++;
+		clean_up(data, forks, 0);
+		print_error("Memory allocation failed at philos\n");
 	}
-	return (1);	
+	i = -1;
+	while (++i < data->philos)
+	{
+		philos[i].index = i + 1;
+		philos[i].meal_number = 0;
+		philos[i].left_fork = &forks[i];
+		philos[i].right_fork = &forks[(i + 1) % data->philos];
+		philos[i].last_meal = get_time();
+		if (pthread_mutex_init(&philos[i].reaper, NULL) != 0)
+		{
+			clean_up(data, forks, 0);
+		    print_error("Mutex init failed at philos.reaper\n");
+		}
+		philos[i].data = data;
+	}
+	return (philos);
 }
 
-t_philo	*init_philos(t_data *data)
-{
-	t_philo *philo;
-	int	i;
-
-	i = 0;
-	philo = malloc(sizeof(t_philo) * data->philos);
-	if (!philo)
-	{
-		print_destroy("Memory allocation failed at philo\n", data);
-		return (0);
-	}
-	while (i < data->philos)
-	{
-		philo[i].index = i;
-		philo[i].last_meal = 0;
-		philo[i].next_meal = data->time_to_die;
-		philo[i].meal_number = 0;
- 		philo[i].right_fork = i;
-		philo[i].left_fork = (i - 1) % data->philos;
-		philo[i].data = data;
-		i++;
-	}
-	return (philo);
-}
-
-int	get_data(int argc, char **argv, t_data *data)
+int	init_data(int argc, char **argv, t_data *data)
 {
 	data->philos = ft_atoi(argv[1]);
-	data->thread = malloc(sizeof(pthread_t) * data->philos);
-	if (!data->thread)
-		return (print_error("Memory allocation failed at data->thread\n"));
-	data->forks = malloc(sizeof(pthread_mutex_t) * data->philos);
-	if (!data->forks)
-		return (print_error("Memory allocation failed at data->forks\n"));
-	data->eatings = malloc(sizeof(pthread_mutex_t) * data->philos);
-	if (!data->eatings)
-		return (print_error("Memory allocation failed at data->eatings\n"));
-	data->finish = malloc(sizeof(pthread_mutex_t));
-	data->message = malloc(sizeof(pthread_mutex_t));
-	data->time_to_die = ft_atoi(argv[2]) * 1000;
-	data->time_to_eat = ft_atoi(argv[3]) * 1000;
-	data->time_to_sleep = ft_atoi(argv[4]) * 1000;
-	data->start = 0;
-	data->dead = 0;
+	data->time_to_die = ft_atoi(argv[2]);
+	data->time_to_eat = ft_atoi(argv[3]);
+	data->time_to_sleep = ft_atoi(argv[4]);
 	data->must_eat = -1;
 	if (argc == 6)
 		data->must_eat = ft_atoi(argv[5]);
+	if (data->philos == 0 || data->must_eat == 0)
+		return (print_error("Number of philosofers must be > 0\n"));
+	if (pthread_mutex_init(&data->stop, NULL) != 0)
+		return (print_error("Mutex init failed at data->stop\n"));
+	data->all_ate = 0;
+	data->dead = 0;
 	return (1);
 }
 
-int	valid_args(char **argv, int argc)
+int	valid_args(char **argv)
 {
 	int	i;
 	int	j;
 
 	i = 1;
-	if (argc == 5 || argc == 6)
+	while (argv[i])
 	{
-		while (argv[i])
+		j = 0;
+		while (argv[i][j])
 		{
-			j = 0;
-			while (argv[i][j])
-			{
-				if (!ft_isdigit(argv[i][j]))
-					return (0);
-				j++;
-			}
-			i++;
+			if (!ft_isdigit(argv[i][j]))
+				return (0);
+			j++;
 		}
-		return (1);
+		i++;
 	}
-	return (0);
+	return (1);
+}
+
+pthread_mutex_t	*init_forks(t_data *data)
+{
+	pthread_mutex_t	*forks;
+	int				i;
+
+	forks = malloc(data->philos * sizeof(pthread_mutex_t));
+	if (!forks)
+		print_error("Memory allocation failed at forks\n");
+	i = 0;
+	while (i < data->philos)
+	{
+		if (pthread_mutex_init(&forks[i], NULL) != 0)
+			print_error("Mutex init failed at forks\n");
+		i++;
+	}
+	return (forks);
 }

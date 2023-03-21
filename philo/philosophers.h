@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 08:15:19 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/20 15:39:10 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/21 09:08:33 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,74 +23,60 @@
 # include <sys/time.h>
 # include <limits.h>
 
+# define FORK 1
+# define EATING 2
+# define SLEEPING 3
+# define THINKING 4
+# define DIED 5
+# define DONE 6
+
 typedef struct s_data
 {
-	pthread_t	*thread;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	*eatings;
-	pthread_mutex_t	*message;
-	pthread_mutex_t	*finish;
 	int philos;
 	int	time_to_die;
 	int	time_to_eat;
 	int	time_to_sleep;
 	int	must_eat;
-	int	start;
 	int	dead;
 	int	all_ate;
+	pthread_mutex_t	stop;
 }	t_data;
 
 typedef	struct s_philo
 {
+	pthread_t	id;
 	int	index;
-	int	last_meal;
-	int	next_meal;
 	int	meal_number;
-	int	left_fork;
-	int	right_fork;
+	unsigned int	last_meal;
+	int	start;
+	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	*right_fork;
+	pthread_mutex_t	reaper;
 	t_data	*data;
 }	t_philo;
 
-void	print_message(char *str, t_philo *philo);
-int		get_time(void);
+void	ft_putchar_fd(char c, int fd);
+void	ft_putstr_fd(char *str, int fd);
+int	ft_isspace(int c);
+int	ft_isdigit(int c);
+int	ft_atoi(const char *str);
+int	print_error(char *str);
+int	init_data(int argc, char **argv, t_data *data);
+int	valid_args(char **argv);
+pthread_mutex_t	*init_forks(t_data *data);
+void	clean_up(t_data *data, pthread_mutex_t *forks, t_philo *philos);
+unsigned int	get_time(void);
+t_philo	*init_philos(t_data *data, pthread_mutex_t *forks);
+int	banquet_done(t_philo *philo);
+int	death(t_philo *philo);
+void	*monitor(void *args);
+int	monitoring(t_data *data, t_philo *philos, pthread_mutex_t *forks);
+void	print_message(t_philo *philo, int i);
 void	take_forks(t_philo *philo);
 void	eating(t_philo *philo);
-void	sleeping(t_philo *philo);
-void	*check_state(void *arg);
-void	*philo_assemble(void *arg);
-int		init_forks(t_data *data);
-t_philo	*init_philos(t_data *data);
-int		get_data(int argc, char **argv, t_data *data);
-int		valid_args(char **argv, int argc);
+void    sleeping(t_philo *philo);
+void	*assemble(void *args);
+int	create_threads(t_data *data, t_philo *philos, pthread_mutex_t *forks);
 
-
-/*DESTROY---------------------------------------------------------------------*/
-
-/* Destroys all mutexes mutexes, calls print_clean_data. */
-int		print_destroy(char *str, t_data *data);
-
-/* Frees all allocated memory for data, calls print_error. */
-int		print_clean_data(char *str, t_data *data);
-
-/* Prints the error message "str" in STD_ERR. */
-int		print_error(char *str);
-
-
-/*UTILS-----------------------------------------------------------------------*/
-
-/* Prints 'c' to the file descriptor. */
-void	ft_putchar_fd(char c, int fd);
-
-/* Prints "str" to the file descriptor. */
-void	ft_putstr_fd(char *str, int fd);
-
-/* Converts *str to int. man atoi.  */
-int		ft_atoi(const char *str);
-
-/* Checks if 'c' is a digit. man isdigit */
-int		ft_isdigit(int c);
-
-/* Checks if 'c' is a space. man isspace */
-int		ft_isspace(int c);
 
 #endif
