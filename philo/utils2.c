@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:04:34 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/21 14:19:39 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/21 14:43:03 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ unsigned int	get_time(void)
 
 int	death(t_philo *philo)
 {
-    unsigned int    i;
+	unsigned int	i;
 
-    i = get_time() - philo->last_meal;
-    if (i > (unsigned int)philo->data->time_to_die)
-    {
-        print_message(philo, 5);
-        philo->data->dead = 1;
-        return (1);
-    }
-    return (0);
+	i = get_time() - philo->last_meal;
+	if (i > (unsigned int)philo->data->time_to_die)
+	{
+		print_message(philo, 5);
+		philo->data->dead = 1;
+		return (1);
+	}
+	return (0);
 }

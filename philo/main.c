@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 06:14:47 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/21 08:10:10 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/21 14:34:35 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,18 @@ int	main(int argc, char **argv)
 	pthread_mutex_t	*forks;
 	t_philo			*philo;
 
-    if (argc == 5 || argc == 6)
-    {
-        if (!valid_args(argv) || !init_data(argc, argv, &data))
-            return (0);
-        forks = init_forks(&data);
-        philo = init_philos(&data, forks);
-        if (!create_threads(&data, philo, forks))
-            return (0);
-        clean_up(&data, forks, philo);
-	    return (1);
-    }
-    else
-        print_error("Invalid number of arguments");
-    return (0);
+	if (argc == 5 || argc == 6)
+	{
+		if (!valid_args(argv) || !init_data(argc, argv, &data))
+			return (0);
+		forks = init_forks(&data);
+		philo = init_philos(&data, forks);
+		if (!create_threads(&data, philo, forks))
+			return (0);
+		clean_up(&data, forks, philo);
+		return (1);
+	}
+	else
+		print_error("Invalid number of arguments");
+	return (0);
 }

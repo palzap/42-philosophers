@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:00:21 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/21 12:07:34 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/21 14:37:51 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_philo	*init_philos(t_data *data, pthread_mutex_t *forks)
 		if (pthread_mutex_init(&philos[i].reaper, NULL) != 0)
 		{
 			clean_up(data, forks, 0);
-		    print_error("Mutex init failed at philos.reaper\n");
+			print_error("Mutex init failed at philos.reaper\n");
 		}
 		philos[i].data = data;
 	}

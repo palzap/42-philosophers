@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:01:17 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/21 14:12:54 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/21 14:42:04 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	*monitor(void *args)
 	philos = (t_philo *)args;
 	if (philos->data->must_eat > 0)
 	{
-		while(philos->data->must_eat > philos->meal_number && !philos->data->dead)
+		while (philos->data->must_eat > philos->meal_number
+			&& !philos->data->dead)
 		{
 			if (death(philos))
 				break ;
@@ -27,7 +28,7 @@ void	*monitor(void *args)
 	}
 	else
 	{
-		while(!philos->data->dead)
+		while (!philos->data->dead)
 		{
 			if (death(philos))
 				break ;
@@ -70,12 +71,12 @@ void	*assemble(void *args)
 	philo = (t_philo *)args;
 	if (philo->data->must_eat > 0)
 	{
-		while(philo->data->must_eat > philo->meal_number && !philo->data->dead)
+		while (philo->data->must_eat > philo->meal_number && !philo->data->dead)
 			actions(philo);
 	}
 	else
 	{
-		while(!philo->data->dead)
+		while (!philo->data->dead)
 			actions(philo);
 	}
 	return (0);
@@ -89,10 +90,10 @@ int	create_threads(t_data *data, t_philo *philos, pthread_mutex_t *forks)
 	while (++i < data->philos)
 	{
 		philos[i].start = get_time();
-		if (pthread_create(&philos[i].id, NULL, assemble, 
-            (void *)&philos[i]) != 0)
+		if (pthread_create(&philos[i].id, NULL,
+				assemble, (void *)&philos[i]) != 0)
 		{
-            clean_up(data, forks, philos);
+			clean_up(data, forks, philos);
 			return (print_error("Thread creation failed at philos\n"));
 		}
 	}
