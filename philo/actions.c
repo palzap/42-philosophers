@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:02:25 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/21 12:19:12 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/21 14:17:32 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	print_message(t_philo *philo, int i)
 {
 	unsigned int time;
 
-	if (philo->data->dead || banquet_done(philo))
+	if (philo->data->dead)
 		return ;
 	time = get_time() - philo->start;
 	pthread_mutex_lock(&philo->data->stop);
@@ -30,9 +30,6 @@ void	print_message(t_philo *philo, int i)
 	    printf("%u\t%d\t%s", time, philo->index, "is thinking\n");
     if (i == 5)
 	    printf("%u\t%d\t%s", time, philo->index, "has died\n");
-   /*  if (i == 6)
-	    printf("%u\tBanquet done after %d meals\n", time,
-            philo->data->must_eat); */
 	pthread_mutex_unlock(&philo->data->stop);
 }
 

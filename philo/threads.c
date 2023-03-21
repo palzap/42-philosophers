@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:01:17 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/21 12:15:29 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/21 14:12:54 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,30 +15,24 @@
 void	*monitor(void *args)
 {
 	t_philo	*philos;
-	int		i;
 
 	philos = (t_philo *)args;
-	while (!banquet_done(philos))
+	if (philos->data->must_eat > 0)
 	{
-		i = -1;
-		while (++i < philos->data->philos)
+		while(philos->data->must_eat > philos->meal_number && !philos->data->dead)
 		{
-			pthread_mutex_lock(&philos[i].reaper);
-			if (death(&philos[i]))
-			{
-				print_message(philos, 5);
-				philos->data->dead = 1;
-				pthread_mutex_unlock(&philos[i].reaper);
-				pthread_mutex_unlock(&philos[i].data->stop);
-				return (0);
-			}
-			pthread_mutex_unlock(&philos[i].reaper);
-			if (philos[i].meal_number == philos[i].data->must_eat)
-				philos->data->all_ate++;
+			if (death(philos))
+				break ;
 		}
 	}
-    printf("%u\tBanquet done after %d meals\n", get_time() - philos->start,
-        philos->data->must_eat);
+	else
+	{
+		while(!philos->data->dead)
+		{
+			if (death(philos))
+				break ;
+		}
+	}
 	return (0);
 }
 
@@ -59,23 +53,30 @@ int	monitoring(t_data *data, t_philo *philos, pthread_mutex_t *forks)
 	return (1);
 }
 
+void	actions(t_philo *philo)
+{
+	eating(philo);
+	if (philo->data->must_eat != philo->meal_number)
+	{
+		sleeping(philo);
+		print_message(philo, 4);
+	}
+}
+
 void	*assemble(void *args)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)args;
-	while (!philo->data->dead && !banquet_done(philo))
+	if (philo->data->must_eat > 0)
 	{
-		if (philo->data->philos == 1)
-		{
-			pthread_mutex_lock(philo->left_fork);
-			print_message(philo, 1);
-			philo->last_meal = get_time();
-			return (0);
-		}
-		eating(philo);
-		sleeping(philo);
-		print_message(philo, 4);
+		while(philo->data->must_eat > philo->meal_number && !philo->data->dead)
+			actions(philo);
+	}
+	else
+	{
+		while(!philo->data->dead)
+			actions(philo);
 	}
 	return (0);
 }

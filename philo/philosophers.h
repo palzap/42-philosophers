@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 08:15:19 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/21 09:08:33 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/21 13:54:14 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,6 @@ void	eating(t_philo *philo);
 void    sleeping(t_philo *philo);
 void	*assemble(void *args);
 int	create_threads(t_data *data, t_philo *philos, pthread_mutex_t *forks);
-
+void	actions(t_philo *philo);
 
 #endif

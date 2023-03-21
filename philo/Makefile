@@ -16,12 +16,12 @@ HEADER		= philosophers.h
 #----------DIRS----------#
 
 SRC =	actions.c \
-		free.c \
-		init.c \
-		main.c \
-		threads.c \
-		utils.c \
-		utils2.c \
+	free.c \
+	init.c \
+	main.c \
+	threads.c \
+	utils.c \
+	utils2.c \
 
 #--------COMMANDS--------#
 CC = clang
