@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:04:34 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/21 14:43:03 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/22 08:15:51 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,21 @@ unsigned int	get_time(void)
 
 int	death(t_philo *philo)
 {
-	unsigned int	i;
+	unsigned int	time;
+	int	i;
 
-	i = get_time() - philo->last_meal;
-	if (i > (unsigned int)philo->data->time_to_die)
+	i = 0;
+
+	while (i < philo->data->philos)
 	{
-		print_message(philo, 5);
-		philo->data->dead = 1;
-		return (1);
+		time = get_time() - philo[i].last_meal;
+		if (time > (unsigned int)philo->data->time_to_die)
+		{
+			print_message(&philo[i], 5);
+			philo->data->dead = 1;
+			return (1);
+		}
+		i++;
 	}
 	return (0);
 }

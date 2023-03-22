@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:02:25 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/21 14:36:42 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/22 10:40:28 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ void	print_message(t_philo *philo, int i)
 
 void	take_forks(t_philo *philo)
 {
-	pthread_mutex_lock(philo->left_fork);
 	pthread_mutex_lock(philo->right_fork);
+	pthread_mutex_lock(philo->left_fork);
 	print_message(philo, 1);
 	print_message(philo, 1);
 }

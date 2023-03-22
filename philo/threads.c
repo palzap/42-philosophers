@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:01:17 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/21 14:42:04 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/22 09:15:54 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,23 +37,6 @@ void	*monitor(void *args)
 	return (0);
 }
 
-int	monitoring(t_data *data, t_philo *philos, pthread_mutex_t *forks)
-{
-	pthread_t	monitoring;
-
-	if (pthread_create(&monitoring, NULL, monitor, (void *)philos) != 0)
-	{
-		clean_up(data, forks, philos);
-		return (print_error("Thread creation failed at monitoring\n"));
-	}
-	if (pthread_join(monitoring, NULL) != 0)
-	{
-		clean_up(data, forks, philos);
-		return (print_error("Thread join failed at monitoring\n"));
-	}
-	return (1);
-}
-
 void	actions(t_philo *philo)
 {
 	eating(philo);
@@ -69,6 +52,12 @@ void	*assemble(void *args)
 	t_philo	*philo;
 
 	philo = (t_philo *)args;
+	if (philo->data->philos == 1)
+	{
+		pthread_mutex_lock(philo->left_fork);
+		print_message(philo, 1);
+		return (0);
+	}
 	if (philo->data->must_eat > 0)
 	{
 		while (philo->data->must_eat > philo->meal_number && !philo->data->dead)
@@ -80,6 +69,23 @@ void	*assemble(void *args)
 			actions(philo);
 	}
 	return (0);
+}
+
+int	monitoring(t_data *data, t_philo *philos, pthread_mutex_t *forks)
+{
+	pthread_t	monitoring;
+
+	if (pthread_create(&monitoring, NULL, monitor, (void *)philos) != 0)
+	{
+		clean_up(data, forks, philos);
+		return (print_error("Thread creation failed at monitoring\n"));
+	}
+	if (pthread_join(monitoring, NULL) != 0)
+	{
+		clean_up(data, forks, philos);
+		return (print_error("Thread join failed at monitoring\n"));
+	}
+	return (1);
 }
 
 int	create_threads(t_data *data, t_philo *philos, pthread_mutex_t *forks)
