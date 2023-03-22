@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:02:25 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/22 10:40:28 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/22 11:57:28 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ void	print_message(t_philo *philo, int i)
 
 void	take_forks(t_philo *philo)
 {
-	pthread_mutex_lock(philo->right_fork);
 	pthread_mutex_lock(philo->left_fork);
 	print_message(philo, 1);
+	pthread_mutex_lock(philo->right_fork);
 	print_message(philo, 1);
 }
 
@@ -49,8 +49,8 @@ void	eating(t_philo *philo)
 	philo->last_meal = get_time();
 	pthread_mutex_unlock(&philo->reaper);
 	usleep(philo->data->time_to_eat * 1000);
-	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
+	pthread_mutex_unlock(philo->left_fork);
 	philo->meal_number++;
 }
 

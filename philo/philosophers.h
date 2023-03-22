@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 08:15:19 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/22 09:04:37 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/22 12:55:12 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,5 +140,9 @@ unsigned int	get_time(void);
 
 /* Checks if any philosopher died. */
 int				death(t_philo *philo);
+
+/* Joins threads to terminate them. */
+int				join_threads(t_data *data, t_philo *philos,
+					pthread_mutex_t *forks);
 
 #endif

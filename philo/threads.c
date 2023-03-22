@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:01:17 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/22 09:15:54 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/22 12:47:57 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int	create_threads(t_data *data, t_philo *philos, pthread_mutex_t *forks)
 	i = -1;
 	while (++i < data->philos)
 	{
+		usleep(100);
 		philos[i].start = get_time();
 		if (pthread_create(&philos[i].id, NULL,
 				assemble, (void *)&philos[i]) != 0)
@@ -106,13 +107,6 @@ int	create_threads(t_data *data, t_philo *philos, pthread_mutex_t *forks)
 	if (!monitoring(data, philos, forks))
 		return (0);
 	i = -1;
-	while (++i < data->philos)
-	{
-		if (pthread_join(philos[i].id, NULL) != 0)
-		{
-			clean_up(data, forks, philos);
-			return (print_error("Thread join failed at philos\n"));
-		}
-	}
+	join_threads(data, philos, forks);
 	return (1);
 }
