@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:01:17 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/22 12:47:57 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/23 16:40:27 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,23 +17,10 @@ void	*monitor(void *args)
 	t_philo	*philos;
 
 	philos = (t_philo *)args;
-	if (philos->data->must_eat > 0)
-	{
-		while (philos->data->must_eat > philos->meal_number
-			&& !philos->data->dead)
-		{
-			if (death(philos))
-				break ;
-		}
-	}
-	else
-	{
-		while (!philos->data->dead)
-		{
-			if (death(philos))
-				break ;
-		}
-	}
+	while ((philos->data->must_eat > philos->meal_number && !philos->data->dead)
+		|| (philos->data->must_eat == -1 && !philos->data->dead))
+		if (death(philos))
+			break ;
 	return (0);
 }
 
@@ -58,16 +45,9 @@ void	*assemble(void *args)
 		print_message(philo, 1);
 		return (0);
 	}
-	if (philo->data->must_eat > 0)
-	{
-		while (philo->data->must_eat > philo->meal_number && !philo->data->dead)
-			actions(philo);
-	}
-	else
-	{
-		while (!philo->data->dead)
-			actions(philo);
-	}
+	while ((philo->data->must_eat > philo->meal_number && !philo->data->dead)
+		|| (philo->data->must_eat == -1 && !philo->data->dead))
+		actions(philo);
 	return (0);
 }
 
@@ -95,7 +75,7 @@ int	create_threads(t_data *data, t_philo *philos, pthread_mutex_t *forks)
 	i = -1;
 	while (++i < data->philos)
 	{
-		usleep(100);
+		usleep(60);
 		philos[i].start = get_time();
 		if (pthread_create(&philos[i].id, NULL,
 				assemble, (void *)&philos[i]) != 0)
