@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:03:41 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/23 21:49:31 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/24 09:02:32 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	clean_up(t_data *data, t_philo *philos)
 	sem_unlink("can_die");
 	if (philos)
 	{
-		//free(philos);
+		free(philos);
 		philos = 0;
 	}
 }

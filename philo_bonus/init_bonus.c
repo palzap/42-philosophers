@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:00:21 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/23 21:49:05 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/24 08:46:55 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 
 void	init_semaphore(t_data *data)
 {
-/* 	sem_close(data->forks);
-	sem_close(data->reaper);
-	sem_close(data->stop);
-	sem_close(data->finish); */
 	sem_unlink("forks");
 	sem_unlink("reaper");
 	sem_unlink("stop");
@@ -45,7 +41,6 @@ t_philo	*init_philos(t_data *data)
 		philos[i].index = i + 1;
 		philos[i].meal_number = 0;
 		philos[i].last_meal = get_time();
-		philos[i].start = 0;
 		sem_unlink("can_die");
 		philos[i].can_die = sem_open("can_die", O_CREAT, 0644, 0);
 		philos[i].data = data;
@@ -59,7 +54,7 @@ int	init_data(int argc, char **argv, t_data *data)
 	data->time_to_die = ft_atoi(argv[2]);
 	data->time_to_eat = ft_atoi(argv[3]);
 	data->time_to_sleep = ft_atoi(argv[4]);
-	data->pid = malloc(sizeof(int) * data->philos);
+	data->pid = malloc(sizeof(int *) * data->philos);
 	data->must_eat = -1;
 	if (argc == 6)
 		data->must_eat = ft_atoi(argv[5]);

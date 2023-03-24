@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 08:15:19 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/23 21:48:56 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/24 09:28:00 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct s_data
 	int				dead;
 	int				all_ate;
 	int				*pid;
+	int				start;
 	pthread_t		death;
 	pthread_t		done;
 	sem_t			*forks;
@@ -56,9 +57,9 @@ typedef struct s_data
 typedef struct s_philo
 {
 	int				index;
+	int				id;
 	int				meal_number;
 	unsigned int	last_meal;
-	int				start;
 	sem_t			*can_die;
 	t_data			*data;
 }	t_philo;
@@ -120,7 +121,7 @@ void			*monitoring(void *args);
 /* int				monitoring(t_data *data, t_philo *philos); */
 
 /* Simple function that executes eating, sleeping and thinking. */
-void			actions(t_data *data, t_philo *philo);
+void			actions(t_data *data, t_philo *philo, int i);
 
 /* Function that runs on every philo thread. It checks availability of mutexes 
 and calls the "actions" function to execute all requested actions. */

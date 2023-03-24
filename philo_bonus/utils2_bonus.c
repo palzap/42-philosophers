@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:04:34 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/23 21:49:41 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/24 10:11:01 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	*monitoring(void *args)
 	i = -1;
 	while (++i < philos->data->philos)
 		kill(philos->data->pid[i], 1);
+	clean_up(philos->data, philos);
 	exit (0);
 }
 
@@ -54,7 +55,7 @@ void	*death(void *args)
 	while (1)
 	{
 		time = get_time() - philo->last_meal;
-		if (time > (unsigned int)philo->data->time_to_die)
+		if (time >= (unsigned int)philo->data->time_to_die)
 		{
 			sem_wait(philo->can_die);
 			print_message(philo->data, philo, 5);
@@ -64,7 +65,6 @@ void	*death(void *args)
 			sem_post(philo->data->reaper);
 			while (++i <= philo->data->philos)
 				sem_post(philo->data->finish);
-			clean_up(philo->data, philo);
 		}
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:02:25 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/23 21:49:15 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/24 08:45:27 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ void	print_message(t_data *data, t_philo *philo, int i)
 {
 	unsigned int	time;
 
-	if (philo->data->dead)
+	if (philo->data->dead == 1)
 		return ;
-	time = get_time() - philo->start;
+	time = get_time() - philo->data->start;
 	sem_wait(data->stop);
 	if (i == 1)
 		printf("%u\t%d\t%s", time, philo->index, "has taken a fork\n");
