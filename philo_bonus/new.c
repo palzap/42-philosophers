@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 08:00:20 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/28 15:48:36 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/28 16:20:47 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,11 @@ int	ft_atoi(const char *str)
 void	init_semaphores(t_data *data)
 {
 	sem_unlink("forks");
-	//sem_unlink("reaper");
+	sem_unlink("meals");
 	sem_unlink("message");
 	sem_unlink("finish");
 	data->forks = sem_open("forks", O_CREAT, 0644, data->philo_no);
-	//data->reaper = sem_open("reaper", O_CREAT, 0644, 0);
+	data->meals = sem_open("meals", O_CREAT, 0644, 0);
 	data->message = sem_open("message", O_CREAT, 0644, 1);
 	data->finish = sem_open("finish", O_CREAT, 0644, 0);
 }
@@ -134,15 +134,15 @@ void	print_message(t_data *data, int n, int i)
 	time = get_time() - data->start;
 	sem_wait(data->message);
 	if (i == 1)
-		printf("%u\t%d\t%s", time, data->philos[n].id, "has taken a fork\n");
+		printf("%u %d %s", time, data->philos[n].id, "has taken a fork\n");
 	if (i == 2)
-		printf("%u\t%d\t%s", time, data->philos[n].id, "is eating\n");
+		printf("%u %d %s", time, data->philos[n].id, "is eating\n");
 	if (i == 3)
-		printf("%u\t%d\t%s", time, data->philos[n].id, "is sleeping\n");
+		printf("%u %d %s", time, data->philos[n].id, "is sleeping\n");
 	if (i == 4)
-		printf("%u\t%d\t%s", time, data->philos[n].id, "is thinking\n");
+		printf("%u %d %s", time, data->philos[n].id, "is thinking\n");
 	if (i == 5)
-		printf("%u\t%d\t%s", time, data->philos[n].id, "has died\n");
+		printf("%u %d %s", time, data->philos[n].id, "has died\n");
 	sem_post(data->message);
 }
 
@@ -165,7 +165,7 @@ void	eating(t_data *data, int n)
 	sem_post(data->forks);
 	data->philos[n].meal_number++;
 	if (data->philos[n].meal_number == data->must_eat)
-		data->all_ate++;
+		sem_post(data->meals);
 }
 
 void	sleeping(t_data *data, int n)
@@ -276,24 +276,59 @@ void	*monitoring(void *arg)
 	return (0);
 }
 
+void	*banquet_done(void *arg)
+{
+	t_data	*data;
+	int		i;
+	int		j;
+	
+	i = -1;
+	j = 0;
+	data = (t_data *)arg;
+	while (1)
+	{
+		sem_wait(data->meals);
+			j++;
+		if (j == data->philo_no)
+		{
+			
+			while (++i < data->philo_no)
+				kill(data->pid[i], SIGKILL);
+			return (0);
+		}
+	}
+	return (0);
+}
+
 int	main(int ac, char **av)
 {
 	t_data	*data;
 	pthread_t	monitor;
+	pthread_t	banquet;
+	int	i;
 
+	i = 0;
 	if (ac == 5 || ac == 6)
 	{
 		data = init_data(ac, av);
 		data->start = get_time();
 		data->index = -1;
-		printf("HERE\n");
-		pthread_create(&monitor, 0, monitoring, data);
 		while (++data->index < data->philo_no)
 		{
 			data->pid[data->index] = fork();
 			if(data->pid[data->index] == 0)
 				processes(data, data->index);
 		}
+		pthread_create(&monitor, 0, monitoring, data);
+		pthread_create(&banquet, 0, banquet_done, data);
+		/* while (1)
+		{
+			sem_wait(data->meals);
+				i++;
+			if (i == data->philo_no)
+				while (++i < data->philo_no)
+					kill(data->pid[i], SIGKILL);
+		} */
 		waitpid(-1, 0, 0);
 		clean_exit(data);
 		return (0);
