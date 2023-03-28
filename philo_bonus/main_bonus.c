@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 06:14:47 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/24 09:57:24 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/28 11:08:22 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ int	main(int argc, char **argv)
 		philos->id = -1;
 		while (++philos->id < data.philos)
 		{
-			usleep(100);
 			data.pid[philos->id] = fork();
 			if (data.pid[philos->id] == 0)
 				processes(&data, philos);

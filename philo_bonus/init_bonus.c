@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:00:21 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/24 08:46:55 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/28 15:13:29 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	init_semaphore(t_data *data)
 	sem_unlink("stop");
 	sem_unlink("finish");
 	data->forks = sem_open("forks", O_CREAT, 0644, data->philos);
+	printf("%d\n", data->forks);
 	data->reaper = sem_open("reaper", O_CREAT, 0644, 0);
 	data->stop = sem_open("stop", O_CREAT, 0644, 1);
 	data->finish = sem_open("finish", O_CREAT, 0644, 0);
