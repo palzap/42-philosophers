@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:02:25 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/23 17:15:00 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/29 18:28:59 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ void	print_message(t_philo *philo, int i)
 {
 	unsigned int	time;
 
-	if (philo->data->dead)
+	if (philo->data->dead || philo->data->all_ate)
 		return ;
-	time = get_time() - philo->start;
+	time = get_time() - philo->data->start;
 	pthread_mutex_lock(&philo->data->stop);
 	if (i == 1)
 		printf("%u\t%d\t%s", time, philo->index, "has taken a fork\n");
@@ -47,11 +47,11 @@ void	eating(t_philo *philo)
 	pthread_mutex_lock(&philo->reaper);
 	print_message(philo, 2);
 	philo->last_meal = get_time();
+	philo->meal_number++;
 	pthread_mutex_unlock(&philo->reaper);
 	usleep(philo->data->time_to_eat * 1000);
 	pthread_mutex_unlock(philo->right_fork);
 	pthread_mutex_unlock(philo->left_fork);
-	philo->meal_number++;
 }
 
 void	sleeping(t_philo *philo)
