@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 08:15:19 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/28 14:32:09 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/29 18:28:24 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_data
 	int				time_to_sleep;
 	int				must_eat;
 	int				dead;
+	unsigned int	start;
 	int				all_ate;
 	pthread_mutex_t	stop;
 }	t_data;
@@ -48,7 +49,6 @@ typedef struct s_philo
 	int				index;
 	int				meal_number;
 	unsigned int	last_meal;
-	int				start;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	pthread_mutex_t	reaper;
@@ -137,6 +137,9 @@ int				ft_atoi(const char *str);
 
 /* Calculates the current time in miliseconds after. */
 unsigned int	get_time(void);
+
+/* Checks if all philosophers ate must_eat times. */
+int				banquet(t_philo *philo);
 
 /* Checks if any philosopher died. */
 int				death(t_philo *philo);

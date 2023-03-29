@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 06:14:47 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/21 14:34:35 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/29 18:12:25 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int	main(int argc, char **argv)
 			return (0);
 		forks = init_forks(&data);
 		philo = init_philos(&data, forks);
+		data.start = get_time();
 		if (!create_threads(&data, philo, forks))
 			return (0);
 		clean_up(&data, forks, philo);
