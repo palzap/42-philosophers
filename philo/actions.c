@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:02:25 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/29 18:28:59 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/29 19:32:52 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	print_message(t_philo *philo, int i)
 {
 	unsigned int	time;
 
-	if (philo->data->dead || philo->data->all_ate)
+	if (philo->data->dead)
 		return ;
 	time = get_time() - philo->data->start;
 	pthread_mutex_lock(&philo->data->stop);
@@ -48,6 +48,8 @@ void	eating(t_philo *philo)
 	print_message(philo, 2);
 	philo->last_meal = get_time();
 	philo->meal_number++;
+	if (philo->meal_number == philo->data->must_eat)
+		philo->data->all_ate--;
 	pthread_mutex_unlock(&philo->reaper);
 	usleep(philo->data->time_to_eat * 1000);
 	pthread_mutex_unlock(philo->right_fork);

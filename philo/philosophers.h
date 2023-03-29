@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/13 08:15:19 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/29 18:28:24 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/29 19:39:22 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,6 @@ void			*monitor(void *args);
 int				monitoring(t_data *data, t_philo *philos,
 					pthread_mutex_t *forks);
 
-/* Simple function that executes eating, sleeping and thinking. */
-void			actions(t_philo *philo);
 
 /* Function that runs on every philo thread. It checks availability of mutexes 
 and calls the "actions" function to execute all requested actions. */
@@ -114,6 +112,10 @@ void			*assemble(void *args);
 
 /* Creates all philo threads. */
 int				create_threads(t_data *data, t_philo *philos,
+					pthread_mutex_t *forks);
+
+/* Joins threads to terminate them. */
+int				join_threads(t_data *data, t_philo *philos,
 					pthread_mutex_t *forks);
 
 /*UTILS-----------------------------------------------------------------------*/
@@ -143,9 +145,5 @@ int				banquet(t_philo *philo);
 
 /* Checks if any philosopher died. */
 int				death(t_philo *philo);
-
-/* Joins threads to terminate them. */
-int				join_threads(t_data *data, t_philo *philos,
-					pthread_mutex_t *forks);
 
 #endif

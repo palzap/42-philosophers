@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:00:21 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/22 15:12:10 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/29 19:34:11 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	init_data(int argc, char **argv, t_data *data)
 		return (print_error("Number of philosophers must be > 0\n"));
 	if (pthread_mutex_init(&data->stop, NULL) != 0)
 		return (print_error("Mutex init failed at data->stop\n"));
-	data->all_ate = 0;
+	data->all_ate = ft_atoi(argv[1]);
 	data->dead = 0;
 	return (1);
 }

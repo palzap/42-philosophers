@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:03:41 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/22 08:38:30 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/29 19:25:09 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,10 @@ void	clean_up(t_data *data, pthread_mutex_t *forks, t_philo *philos)
 		{
 			pthread_mutex_destroy(&philos[i].reaper);
 			pthread_mutex_destroy(&forks[i]);
-			philos[i].left_fork = NULL;
-			philos[i].right_fork = NULL;
 			i++;
 		}
 		free(forks);
-		forks = 0;
 	}
 	if (philos)
-	{
 		free(philos);
-		philos = 0;
-	}
 }
