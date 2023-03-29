@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   new_philo.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 08:00:37 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/28 16:11:44 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/29 20:42:41 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_philo
 	int				meal_number;
 	int				is_dead;
 	unsigned int	last_meal;
-	sem_t			*can_die;
+	sem_t			can_die;
 }	t_philo;
 
 typedef struct s_data
@@ -63,12 +63,11 @@ t_data			*init_data(int ac, char **av);
 void			init_philos(t_data *data);
 void			init_semaphores(t_data *data);
 void			clean_exit(t_data *data);
-void			print_message(t_data *data, int n, int i);
-void			take_forks(t_data *data, int n);
-void			eating(t_data *data, int n);
-void			sleeping(t_data *data, int n);
-void			actions(t_data *data, int n);
-void			processes(t_data *data, int i);
+void			print_message(t_data *data, int i);
+void			take_forks(t_data *data);
+void			eating(t_data *data);
+void			sleeping(t_data *data);
+void			processes(t_data *data);
 unsigned int	get_time(void);
 void			ft_putchar_fd(char c, int fd);
 void			ft_putstr_fd(char *str, int fd);
