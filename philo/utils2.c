@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:04:34 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/29 19:36:45 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/29 20:10:26 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ int	death(t_philo *philo)
 		time = get_time() - philo[i].last_meal;
 		if (time > (unsigned int)philo->data->time_to_die)
 		{
+			pthread_mutex_lock(&philo->reaper);
 			print_message(&philo[i], 5);
 			philo->data->dead = 1;
+			pthread_mutex_unlock(&philo->reaper);
 			return (1);
 		}
 		i++;
