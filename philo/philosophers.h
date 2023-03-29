@@ -105,7 +105,6 @@ void			*monitor(void *args);
 int				monitoring(t_data *data, t_philo *philos,
 					pthread_mutex_t *forks);
 
-
 /* Function that runs on every philo thread. It checks availability of mutexes 
 and calls the "actions" function to execute all requested actions. */
 void			*assemble(void *args);
