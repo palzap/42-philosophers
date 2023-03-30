@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 08:47:13 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/30 10:46:00 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/30 11:00:50 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	print_message(t_data *data, int i)
 	time = get_time() - data->start;
 	sem_wait(data->message);
 	if (i == 1)
-		printf("%u %d %s", time, data->philos[data->index].id, "has taken a fork\n");
+		printf("%u %d %s", time, data->philos[data->index].id,
+			"has taken a fork\n");
 	if (i == 2)
 		printf("%u %d %s", time, data->philos[data->index].id, "is eating\n");
 	if (i == 3)
@@ -52,7 +53,8 @@ void	eating(t_data *data)
 	sem_post(data->forks);
 	sem_post(data->forks);
 	data->philos[data->index].meal_number++;
-	if (data->philos[data->index].meal_number == data->must_eat && data->must_eat != -1)
+	if (data->philos[data->index].meal_number == data->must_eat
+		&& data->must_eat != -1)
 		sem_post(data->meals);
 }
 

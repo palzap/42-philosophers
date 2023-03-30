@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 08:47:55 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/30 10:42:53 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/30 11:04:28 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ t_data	*init_data(int ac, char **av)
 	if (ac == 6)
 		data->must_eat = ft_atoi(av[5]);
 	data->all_ate = ft_atoi(av[1]);
-	data->start = 0;
+	data->start = get_time();
 	data->index = 0;
 	init_philos(data);
 	init_semaphores(data);

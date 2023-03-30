@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 08:00:20 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/30 10:46:44 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/30 11:00:08 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	*death_check(void *arg)
 	unsigned int	time;
 	t_data			*data;
 
-	data = (t_data *)arg;	
+	data = (t_data *)arg;
 	while (1)
 	{
 		time = get_time() - data->philos[data->index].last_meal;
@@ -44,7 +44,7 @@ void	*death_check(void *arg)
 void	processes(t_data *data)
 {
 	pthread_t	reaper;
-	
+
 	if (data->index % 2)
 		usleep(1000);
 	pthread_create(&reaper, 0, death_check, data);

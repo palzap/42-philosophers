@@ -6,12 +6,12 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 08:00:37 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/30 10:38:05 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/30 11:22:09 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILOSPHERS_BONUS_H
-# define PHILOSPHERS_BONUS_H
+#ifndef PHILOSOPHERS_BONUS_H
+# define PHILOSOPHERS_BONUS_H
 
 # include <stdlib.h>
 # include <stdio.h>
@@ -58,15 +58,16 @@ typedef struct s_data
 /*ACTIONS---------------------------------------------------------------------*/
 
 /* Prints the respective message based on the value of 'i'. 
-Locks "stop" mutex to avoid printing messages at the same time. */
+Locks "message" semaphore to avoid printing messages at the same time. */
 void			print_message(t_data *data, int i);
 
-/* Takes the necessary forks to start eating by locking the respective mutex. */
+/* Takes forks to start eating by locking the respective semaphore. 
+Usleep is used to prevent philosophers from taking forks right away.*/
 void			take_forks(t_data *data);
 
-/* After taking forks (if mutexes are available), locks reaper mutex to prevent
-dying while eating.
-Uses usleep to for the respective time_to_eat, unlocks mutexes in the end. */
+/* After taking forks (if semaphore is available), locks reaper semaphore to 
+prevent dying while eating.
+Uses usleep for the respective time_to_eat, unlocks semaphores in the end. */
 void			eating(t_data *data);
 
 /* After eating, simply uses usleep for the respective time_to_sleep. */
@@ -74,24 +75,40 @@ void			sleeping(t_data *data);
 
 /*FREE------------------------------------------------------------------------*/
 
-/* Prints the error message "str" to the standard error. */
-//int				print_error(char *str);
+/* Creates and joins the monitoring threads. */
+int				create_monitor_threads(t_data *data);
 
+/* Waits for finish semaphore to be available to pass information to 
+banquet_done to terminate all processes. */
 void			*monitoring(void *arg);
-void			*banquet_done(void *arg);
-void			clean_exit(t_data *data);
 
+/* Waits for semaphores meals and finish to kill all processes, clean and 
+exit program. */
+void			*banquet_done(void *arg);
+
+/* Destroys all semaphores and frees all allocated memory. */
+void			clean_exit(t_data *data);
 
 /*INIT------------------------------------------------------------------------*/
 
+/* Creates all semaphores. */
 void			init_semaphores(t_data *data);
+
+/* Initializes all philosophers. */
 void			init_philos(t_data *data);
+
+/* Initializes all needed data. */
 t_data			*init_data(int ac, char **av);
 
 /*PROCESSES-------------------------------------------------------------------*/
 
+/* Calculates the current time in miliseconds after. */
 unsigned int	get_time(void);
+
+/* Checks condition of current philosopher. If dead, post finish semaphore. */
 void			*death_check(void *arg);
+
+/* Process of each philosopher. */
 void			processes(t_data *data);
 
 /*UTILS-----------------------------------------------------------------------*/

@@ -6,21 +6,33 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 08:46:41 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/30 10:42:47 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/30 11:20:49 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
+int	create_monitor_threads(t_data *data)
+{
+	pthread_t	monitor;
+	pthread_t	banquet;
+
+	pthread_create(&monitor, 0, monitoring, data);
+	pthread_create(&banquet, 0, banquet_done, data);
+	pthread_join(monitor, 0);
+	pthread_join(banquet, 0);
+	return (0);
+}
+
 void	*monitoring(void *arg)
 {
 	t_data	*data;
 	int		i;
-	
+
 	i = -1;
 	data = (t_data *)arg;
 	sem_wait(data->finish);
-	while(++i < data->philo_no)
+	while (++i < data->philo_no)
 		sem_post(data->meals);
 	return (0);
 }
@@ -30,7 +42,7 @@ void	*banquet_done(void *arg)
 	t_data	*data;
 	int		i;
 	int		j;
-	
+
 	i = -1;
 	j = 0;
 	data = (t_data *)arg;
@@ -40,7 +52,6 @@ void	*banquet_done(void *arg)
 			data->all_ate--;
 		if (data->all_ate == 0)
 		{
-			
 			sem_post(data->finish);
 			while (++i < data->philo_no)
 				kill(data->pid[i], SIGKILL);
