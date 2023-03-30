@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+         #
+#    By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/02 12:26:28 by pealexan          #+#    #+#              #
-#    Updated: 2023/03/23 18:58:44 by pealexan         ###   ########.fr        #
+#    Updated: 2023/03/30 08:56:47 by pealexan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,6 @@ SRC =	actions_bonus.c \
 		main_bonus.c \
 		processes_bonus.c \
 		utils_bonus.c \
-		utils2_bonus.c \
 
 #--------COMMANDS--------#
 CC = clang

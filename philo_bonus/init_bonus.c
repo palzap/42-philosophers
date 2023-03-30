@@ -5,83 +5,63 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/21 08:00:21 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/28 15:13:29 by pealexan         ###   ########.fr       */
+/*   Created: 2023/03/30 08:47:55 by pealexan          #+#    #+#             */
+/*   Updated: 2023/03/30 09:07:19 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-void	init_semaphore(t_data *data)
+void	init_semaphores(t_data *data)
 {
 	sem_unlink("forks");
-	sem_unlink("reaper");
-	sem_unlink("stop");
+	sem_unlink("meals");
+	sem_unlink("message");
 	sem_unlink("finish");
-	data->forks = sem_open("forks", O_CREAT, 0644, data->philos);
-	printf("%d\n", data->forks);
-	data->reaper = sem_open("reaper", O_CREAT, 0644, 0);
-	data->stop = sem_open("stop", O_CREAT, 0644, 1);
+	data->forks = sem_open("forks", O_CREAT, 0644, data->philo_no);
+	data->meals = sem_open("meals", O_CREAT, 0644, 0);
+	data->message = sem_open("message", O_CREAT, 0644, 1);
 	data->finish = sem_open("finish", O_CREAT, 0644, 0);
 }
 
-t_philo	*init_philos(t_data *data)
-{
-	t_philo	*philos;
-	int		i;
-
-	philos = malloc(data->philos * sizeof(t_philo));
-	if (!philos)
-	{
-		clean_up(data, philos);
-		print_error("Memory allocation failed at philos\n");
-	}
-	i = -1;
-	while (++i < data->philos)
-	{
-		philos[i].index = i + 1;
-		philos[i].meal_number = 0;
-		philos[i].last_meal = get_time();
-		sem_unlink("can_die");
-		philos[i].can_die = sem_open("can_die", O_CREAT, 0644, 0);
-		philos[i].data = data;
-	}
-	return (philos);
-}
-
-int	init_data(int argc, char **argv, t_data *data)
-{
-	data->philos = ft_atoi(argv[1]);
-	data->time_to_die = ft_atoi(argv[2]);
-	data->time_to_eat = ft_atoi(argv[3]);
-	data->time_to_sleep = ft_atoi(argv[4]);
-	data->pid = malloc(sizeof(int *) * data->philos);
-	data->must_eat = -1;
-	if (argc == 6)
-		data->must_eat = ft_atoi(argv[5]);
-	if (data->philos == 0 || data->must_eat == 0)
-		return (print_error("Number of philosophers/must_eat must be > 0\n"));
-	data->all_ate = 0;
-	data->dead = 0;
-	return (1);
-}
-
-int	valid_args(char **argv)
+void	init_philos(t_data *data)
 {
 	int	i;
-	int	j;
 
-	i = 1;
-	while (argv[i])
+	i = -1;
+	while (++i < data->philo_no)
 	{
-		j = 0;
-		while (argv[i][j])
-		{
-			if (!ft_isdigit(argv[i][j]))
-				return (0);
-			j++;
-		}
-		i++;
+		data->philos[i].id = i + 1;
+		data->philos[i].meal_number = 0;
+		data->philos[i].last_meal = 0;
+		sem_init(&data->philos[i].can_die, 0, 1);
 	}
-	return (1);
+}
+
+t_data	*init_data(int ac, char **av)
+{
+	t_data	*data;
+
+	data = malloc(sizeof(t_data));
+	data->philos = (t_philo *)malloc(sizeof(t_philo) * (ft_atoi(av[1])));
+	data->pid = (int *)malloc(sizeof(int) * (ft_atoi(av[1])));
+	if (!data || !data->philos || !data->pid)
+	{
+		ft_putstr_fd("Error\nMemory allocation failed.\n", 2);
+		exit (1);
+	}
+	data->philo_no = ft_atoi(av[1]);
+	data->time_to_die = ft_atoi(av[2]);
+	data->time_to_eat = ft_atoi(av[3]);
+	data->time_to_sleep = ft_atoi(av[4]);
+	data->must_eat = -1;
+	if (ac == 6)
+		data->must_eat = ft_atoi(av[5]);
+	data->dead = 0;
+	data->all_ate = ft_atoi(av[1]);
+	data->start = 0;
+	data->index = 0;
+	init_philos(data);
+	init_semaphores(data);
+	return (data);
 }

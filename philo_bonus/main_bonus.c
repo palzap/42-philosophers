@@ -5,44 +5,42 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/21 06:14:47 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/28 11:08:22 by pealexan         ###   ########.fr       */
+/*   Created: 2023/03/30 08:46:06 by pealexan          #+#    #+#             */
+/*   Updated: 2023/03/30 09:09:02 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-int	main(int argc, char **argv)
+int	main(int ac, char **av)
 {
-	t_data			data;
-	t_philo			*philos;
-	pthread_t		monitor;
+	t_data	*data;
+	pthread_t	monitor;
+	pthread_t	banquet;
 	int	i;
-	
-	i = -1;
-	if (argc == 5 || argc == 6)
+
+	i = 0;
+	if (ac == 5 || ac == 6)
 	{
-		if (!valid_args(argv) || !init_data(argc, argv, &data))
-			return (0);
-		philos = init_philos(&data);
-		init_semaphore(&data);
-		data.start = get_time();
-		philos->id = -1;
-		while (++philos->id < data.philos)
+		data = init_data(ac, av);
+		data->start = get_time();
+		data->index = -1;
+		while (++data->index < data->philo_no)
 		{
-			data.pid[philos->id] = fork();
-			if (data.pid[philos->id] == 0)
-				processes(&data, philos);
+			data->pid[data->index] = fork();
+			if(data->pid[data->index] == 0)
+			{
+				processes(data);
+				break;
+			}
 		}
-		pthread_create(&monitor, 0, monitoring, philos);
-		pthread_detach(monitor);
-		i = -1;
-		while (++i < data.philos)
-			waitpid(data.pid[i], NULL, 0);
-		clean_up(&data, philos);
-		exit (0);
+		pthread_create(&monitor, 0, monitoring, data);
+		pthread_create(&banquet, 0, banquet_done, data);
+		pthread_join(monitor, 0);
+		pthread_join(banquet, 0);
+		waitpid(-1, 0, WNOHANG);
+		clean_exit(data);
+		return (0);
 	}
-	else
-		print_error("Invalid number of arguments");
 	return (0);
 }

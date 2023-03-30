@@ -3,58 +3,59 @@
 /*                                                        :::      ::::::::   */
 /*   actions_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/21 08:02:25 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/24 08:45:27 by pealexan         ###   ########.fr       */
+/*   Created: 2023/03/30 08:47:13 by pealexan          #+#    #+#             */
+/*   Updated: 2023/03/30 09:14:19 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-void	print_message(t_data *data, t_philo *philo, int i)
+void	print_message(t_data *data, int i)
 {
 	unsigned int	time;
 
-	if (philo->data->dead == 1)
-		return ;
-	time = get_time() - philo->data->start;
-	sem_wait(data->stop);
+	time = get_time() - data->start;
+	sem_wait(data->message);
 	if (i == 1)
-		printf("%u\t%d\t%s", time, philo->index, "has taken a fork\n");
+		printf("%u %d %s", time, data->philos[data->index].id, "has taken a fork\n");
 	if (i == 2)
-		printf("%u\t%d\t%s", time, philo->index, "is eating\n");
+		printf("%u %d %s", time, data->philos[data->index].id, "is eating\n");
 	if (i == 3)
-		printf("%u\t%d\t%s", time, philo->index, "is sleeping\n");
+		printf("%u %d %s", time, data->philos[data->index].id, "is sleeping\n");
 	if (i == 4)
-		printf("%u\t%d\t%s", time, philo->index, "is thinking\n");
+		printf("%u %d %s", time, data->philos[data->index].id, "is thinking\n");
 	if (i == 5)
-		printf("%u\t%d\t%s", time, philo->index, "has died\n");
-	sem_post(data->stop);
+		printf("%u %d %s", time, data->philos[data->index].id, "has died\n");
+	sem_post(data->message);
 }
 
-void	take_forks(t_data *data, t_philo *philo)
+void	take_forks(t_data *data)
 {
 	sem_wait(data->forks);
-	print_message(data, philo, 1);
+	print_message(data, 1);
 	sem_wait(data->forks);
-	print_message(data, philo, 1);
+	print_message(data, 1);
 }
 
-void	eating(t_data *data, t_philo *philo)
+void	eating(t_data *data)
 {
-	take_forks(data, philo);
-	print_message(data, philo, 2);
-	philo->last_meal = get_time();
-	sem_post(philo->can_die);
-	usleep(philo->data->time_to_eat * 1000);
+	take_forks(data);
+	sem_wait(&data->philos[data->index].can_die);
+	print_message(data, 2);
+	data->philos[data->index].last_meal = get_time();
+	sem_post(&data->philos[data->index].can_die);
+	usleep(data->time_to_eat * 1000);
 	sem_post(data->forks);
 	sem_post(data->forks);
-	philo->meal_number++;
+	data->philos[data->index].meal_number++;
+	if (data->philos[data->index].meal_number == data->must_eat && data->must_eat != -1)
+		sem_post(data->meals);
 }
 
-void	sleeping(t_data *data, t_philo *philo)
+void	sleeping(t_data *data)
 {
-	print_message(data, philo, 3);
-	usleep(philo->data->time_to_sleep * 1000);
+	print_message(data, 3);
+	usleep(data->time_to_sleep * 1000);
 }
