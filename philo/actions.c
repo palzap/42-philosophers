@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:02:25 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/29 19:32:52 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/30 08:08:59 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,15 @@ void	print_message(t_philo *philo, int i)
 	time = get_time() - philo->data->start;
 	pthread_mutex_lock(&philo->data->stop);
 	if (i == 1)
-		printf("%u\t%d\t%s", time, philo->index, "has taken a fork\n");
+		printf("%u %d %s", time, philo->index, "has taken a fork\n");
 	if (i == 2)
-		printf("%u\t%d\t%s", time, philo->index, "is eating\n");
+		printf("%u %d %s", time, philo->index, "is eating\n");
 	if (i == 3)
-		printf("%u\t%d\t%s", time, philo->index, "is sleeping\n");
+		printf("%u %d %s", time, philo->index, "is sleeping\n");
 	if (i == 4)
-		printf("%u\t%d\t%s", time, philo->index, "is thinking\n");
+		printf("%u %d %s", time, philo->index, "is thinking\n");
 	if (i == 5)
-		printf("%u\t%d\t%s", time, philo->index, "has died\n");
+		printf("%u %d %s", time, philo->index, "died\n");
 	pthread_mutex_unlock(&philo->data->stop);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 08:01:17 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/29 19:36:29 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/30 08:05:37 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,12 @@ void	*assemble(void *args)
 		usleep(500);
 	while (1)
 	{
+		if (philo->data->philos == 1)
+		{
+			pthread_mutex_lock(philo->left_fork);
+			print_message(philo, 1);
+			return (0);
+		}
 		if (philo->data->dead || !philo->data->all_ate)
 			return (0);
 		eating(philo);
@@ -90,7 +96,7 @@ int	join_threads(t_data *data, t_philo *philos, pthread_mutex_t *forks)
 	i = -1;
 	while (++i < data->philos)
 	{
-		if (pthread_detach(philos[i].id) != 0)
+		if (pthread_join(philos[i].id, 0) != 0)
 		{
 			clean_up(data, forks, philos);
 			return (print_error("Thread join failed at philos\n"));
