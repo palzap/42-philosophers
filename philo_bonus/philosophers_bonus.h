@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 08:00:37 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/30 08:55:54 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/30 10:38:05 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ typedef struct s_data
 	int				must_eat;
 	t_philo			*philos;
 	int				*pid;
-	int				dead;
 	int				all_ate;
 	int				start;
 	int				index;
@@ -53,6 +52,7 @@ typedef struct s_data
 	sem_t			*message;
 	sem_t			*finish;
 	sem_t			*meals;
+	sem_t			*is_dead;
 }	t_data;
 
 /*ACTIONS---------------------------------------------------------------------*/

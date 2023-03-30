@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 08:47:55 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/30 09:07:19 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/30 10:42:53 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	init_philos(t_data *data)
 	{
 		data->philos[i].id = i + 1;
 		data->philos[i].meal_number = 0;
-		data->philos[i].last_meal = 0;
+		data->philos[i].last_meal = get_time();
 		sem_init(&data->philos[i].can_die, 0, 1);
 	}
 }
@@ -57,7 +57,6 @@ t_data	*init_data(int ac, char **av)
 	data->must_eat = -1;
 	if (ac == 6)
 		data->must_eat = ft_atoi(av[5]);
-	data->dead = 0;
 	data->all_ate = ft_atoi(av[1]);
 	data->start = 0;
 	data->index = 0;

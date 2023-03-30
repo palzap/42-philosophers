@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 08:00:20 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/30 09:20:51 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/30 10:46:44 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ void	processes(t_data *data)
 	
 	if (data->index % 2)
 		usleep(1000);
-	data->philos[data->index].last_meal = get_time();
 	pthread_create(&reaper, 0, death_check, data);
 	while (1)
 	{

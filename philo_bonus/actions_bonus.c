@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 08:47:13 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/30 09:14:19 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/03/30 10:46:00 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,16 @@ void	print_message(t_data *data, int i)
 	if (i == 4)
 		printf("%u %d %s", time, data->philos[data->index].id, "is thinking\n");
 	if (i == 5)
-		printf("%u %d %s", time, data->philos[data->index].id, "has died\n");
+		printf("%u %d %s", time, data->philos[data->index].id, "died\n");
 	sem_post(data->message);
 }
 
 void	take_forks(t_data *data)
 {
+	usleep(100);
 	sem_wait(data->forks);
 	print_message(data, 1);
+	usleep(100);
 	sem_wait(data->forks);
 	print_message(data, 1);
 }
