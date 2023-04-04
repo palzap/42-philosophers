@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 08:00:37 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/30 11:22:09 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/04/04 08:12:11 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_philo
 	int				meal_number;
 	int				is_dead;
 	unsigned int	last_meal;
-	sem_t			can_die;
+	sem_t			*can_die;
 }	t_philo;
 
 typedef struct s_data
@@ -127,5 +127,8 @@ int				ft_isdigit(int c);
 
 /* Converts "str" to an int. man atoi. */
 int				ft_atoi(const char *str);
+
+/* Converts "n" to a string. man itoa. */
+char			*ft_itoa(int n);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 08:47:55 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/30 11:04:28 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/04/04 08:12:03 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void	init_semaphores(t_data *data)
 
 void	init_philos(t_data *data)
 {
-	int	i;
+	int		i;
+	char	*philo;
 
 	i = -1;
 	while (++i < data->philo_no)
@@ -34,7 +35,11 @@ void	init_philos(t_data *data)
 		data->philos[i].id = i + 1;
 		data->philos[i].meal_number = 0;
 		data->philos[i].last_meal = get_time();
-		sem_init(&data->philos[i].can_die, 0, 1);
+		philo = ft_itoa(data->philos[i].id);
+		sem_unlink(philo);
+		data->philos[i].can_die = sem_open(philo,
+				O_CREAT, 0644, 1);
+		free(philo);
 	}
 }
 

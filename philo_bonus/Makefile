@@ -21,6 +21,7 @@ SRC =	actions_bonus.c \
 		main_bonus.c \
 		processes_bonus.c \
 		utils_bonus.c \
+		ft_itoa.c \
 
 #--------COMMANDS--------#
 CC = clang

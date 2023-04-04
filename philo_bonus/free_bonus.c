@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 08:46:41 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/30 11:20:49 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/04/04 08:04:47 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ void	*banquet_done(void *arg)
 
 void	clean_exit(t_data *data)
 {
-	int	i;
+	int		i;
+	char	*philo;
 
 	i = -1;
 	sem_close(data->forks);
@@ -75,7 +76,12 @@ void	clean_exit(t_data *data)
 	sem_unlink("meals");
 	sem_unlink("message");
 	while (++i < data->philo_no)
-		sem_destroy(&data->philos->can_die);
+	{
+		philo = ft_itoa(data->philos[i].id);
+		sem_close(data->philos[i].can_die);
+		sem_unlink(philo);
+		free(philo);
+	}
 	free(data->philos);
 	free(data->pid);
 	free(data);

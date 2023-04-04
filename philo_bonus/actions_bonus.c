@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 08:47:13 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/30 11:00:50 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/04/04 08:09:12 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	print_message(t_data *data, int i)
 {
 	unsigned int	time;
 
+	usleep(100);
 	time = get_time() - data->start;
 	sem_wait(data->message);
 	if (i == 1)
@@ -45,10 +46,10 @@ void	take_forks(t_data *data)
 void	eating(t_data *data)
 {
 	take_forks(data);
-	sem_wait(&data->philos[data->index].can_die);
+	sem_wait(data->philos[data->index].can_die);
 	print_message(data, 2);
 	data->philos[data->index].last_meal = get_time();
-	sem_post(&data->philos[data->index].can_die);
+	sem_post(data->philos[data->index].can_die);
 	usleep(data->time_to_eat * 1000);
 	sem_post(data->forks);
 	sem_post(data->forks);

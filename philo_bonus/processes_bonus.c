@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 08:00:20 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/30 11:00:08 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/04/04 07:59:57 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ void	*death_check(void *arg)
 		time = get_time() - data->philos[data->index].last_meal;
 		if (time > (unsigned int)data->time_to_die)
 		{
-			sem_wait(&data->philos[data->index].can_die);
+			sem_wait(data->philos[data->index].can_die);
 			print_message(data, 5);
 			sem_post(data->finish);
-			sem_post(&data->philos[data->index].can_die);
+			sem_post(data->philos[data->index].can_die);
 			exit (0);
 		}
 	}
