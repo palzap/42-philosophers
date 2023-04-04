@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 08:00:37 by pealexan          #+#    #+#             */
-/*   Updated: 2023/04/04 08:12:11 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/04/04 09:21:03 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_data
 	int				all_ate;
 	int				start;
 	int				index;
+	sem_t			*dead;
 	sem_t			*forks;
 	sem_t			*message;
 	sem_t			*finish;

@@ -6,7 +6,7 @@
 /*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 08:47:55 by pealexan          #+#    #+#             */
-/*   Updated: 2023/04/04 08:12:03 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/04/04 09:21:51 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,12 @@ void	init_semaphores(t_data *data)
 	sem_unlink("meals");
 	sem_unlink("message");
 	sem_unlink("finish");
+	sem_unlink("dead");
 	data->forks = sem_open("forks", O_CREAT, 0644, data->philo_no);
 	data->meals = sem_open("meals", O_CREAT, 0644, 0);
 	data->message = sem_open("message", O_CREAT, 0644, 1);
 	data->finish = sem_open("finish", O_CREAT, 0644, 0);
+	data->dead = sem_open("dead", O_CREAT, 0644, 1);
 }
 
 void	init_philos(t_data *data)
