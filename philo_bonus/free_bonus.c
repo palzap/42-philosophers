@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 08:46:41 by pealexan          #+#    #+#             */
-/*   Updated: 2023/04/04 08:04:47 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/05/04 15:09:16 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,12 @@ void	clean_exit(t_data *data)
 	sem_close(data->finish);
 	sem_close(data->meals);
 	sem_close(data->message);
+	sem_close(data->dead);
 	sem_unlink("forks");
 	sem_unlink("finish");
 	sem_unlink("meals");
 	sem_unlink("message");
+	sem_unlink("dead");
 	while (++i < data->philo_no)
 	{
 		philo = ft_itoa(data->philos[i].id);

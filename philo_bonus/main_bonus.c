@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pealexan <pealexan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pealexan <pealexan@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 08:46:06 by pealexan          #+#    #+#             */
-/*   Updated: 2023/03/30 11:20:44 by pealexan         ###   ########.fr       */
+/*   Updated: 2023/05/04 15:06:50 by pealexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@ int	main(int ac, char **av)
 			}
 		}
 		create_monitor_threads(data);
-		waitpid(-1, 0, WNOHANG);
+		i = 1;
+		while (i < 0)
+			i = waitpid(-1, 0, WNOHANG);
 		clean_exit(data);
 		return (0);
 	}
